@@ -112,10 +112,12 @@ void FileLoader::ExtractVertices(Vertex* current_vertex, string& current_line, s
 }
 
 void FileLoader::ExtractFaces(Face* current_face, string& current_line, string& delimeter) {
-	array_size = atoi(current_line.substr(0, current_line.find_first_of(delimeter)).c_str())+1;
-	int* face_values = new int[array_size];
 	string modified_string;
-	int current_pos = 0, previous_pos = 0;
+	int current_pos = current_line.find_first_of(delimeter) + delimeter.size();
+	int previous_pos = current_pos;
+
+	array_size = atoi(current_line.substr(0, current_line.find_first_of(delimeter)).c_str());
+	int* face_values = new int[array_size];
 
 	for(int i = 0; i < array_size; i++) {
 		current_pos = current_line.find(delimeter, current_pos);
@@ -125,7 +127,8 @@ void FileLoader::ExtractFaces(Face* current_face, string& current_line, string& 
 		previous_pos = current_pos;
 	}
 
-	current_face->set_face_values(face_values, array_size);
+	current_face->set_number_of_vertices(array_size);
+	current_face->set_face_values(face_values);
 	delete[] face_values;
 	face_values = NULL;
 }
