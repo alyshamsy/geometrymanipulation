@@ -13,9 +13,12 @@ public:
 	Face(int size);
 	Face(const Face& source);
 	~Face();
-	void set_face_values(int* face_values, int array_size);
+	void set_face_values(int* face_values);
 	vector<int> get_face_values();
+	void set_number_of_vertices(int vertices);
+	int get_number_of_vertices();
 private:
 	vector<int> face;
+	int number_of_vertices;
 };
 #endif
