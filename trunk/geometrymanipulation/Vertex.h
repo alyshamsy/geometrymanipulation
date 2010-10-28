@@ -9,6 +9,8 @@ public:
 	~Vertex();
 	void set_vertex(double a, double b, double c);
 
+	Vertex& operator=(const Vertex& rhs);
+
 	double x, y, z;
 };
 #endif

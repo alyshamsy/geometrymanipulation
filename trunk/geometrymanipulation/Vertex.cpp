@@ -29,3 +29,14 @@ void Vertex::set_vertex(double a, double b, double c) {
 	this->y = b;
 	this->z = c;
 }
+
+Vertex& Vertex::operator=(const Vertex& rhs) {
+	if(this == &rhs)
+		return (*this);
+
+	this->x = rhs.x;
+	this->y = rhs.y;
+	this->z = rhs.z;
+
+	return (*this);
+}
