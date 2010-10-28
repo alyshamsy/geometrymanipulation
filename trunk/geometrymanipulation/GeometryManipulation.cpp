@@ -2,7 +2,7 @@
 #include <math.h>
 #include <string>
 #include <fstream>
-#include "VectorArithmetic.h"
+#include "VectorManipulations.h"
 #include "FileLoader.h"
 #include "ProgramTimer.h"
 
