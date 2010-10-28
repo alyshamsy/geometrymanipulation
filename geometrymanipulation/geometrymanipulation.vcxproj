@@ -62,9 +62,10 @@
   <ItemGroup>
     <ClInclude Include="Face.h" />
     <ClInclude Include="FileLoader.h" />
+    <ClInclude Include="Matrix.h" />
+    <ClInclude Include="MatrixManipulations.h" />
     <ClInclude Include="ProgramTimer.h" />
-    <ClInclude Include="Transformations.h" />
-    <ClInclude Include="VectorArithmetic.h" />
+    <ClInclude Include="VectorManipulations.h" />
     <ClInclude Include="Vertex.h" />
   </ItemGroup>
   <ItemGroup>
@@ -76,9 +77,10 @@
     <ClCompile Include="Face.cpp" />
     <ClCompile Include="FileLoader.cpp" />
     <ClCompile Include="GeometryManipulation.cpp" />
+    <ClCompile Include="Matrix.cpp" />
+    <ClCompile Include="MatrixManipulations.cpp" />
     <ClCompile Include="ProgramTimer.cpp" />
-    <ClCompile Include="Transformations.cpp" />
-    <ClCompile Include="VectorArithmetic.cpp" />
+    <ClCompile Include="VectorManipulations.cpp" />
     <ClCompile Include="Vertex.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
