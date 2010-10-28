@@ -47,7 +47,7 @@ void FileLoader::get_faces_vector() {
 
 void FileLoader::ParseFile(string& file_name) {
 	string current_line, delimeter = " ";
-	int i = 0, j = 0;
+	int i = 0, j = 0, bad_input = 0, array_size;
 	Vertex current_vertex;
 	Face current_face;
 
@@ -57,82 +57,37 @@ void FileLoader::ParseFile(string& file_name) {
 	//getline(read_file, current_line);
 	
 	if(current_line.find("vertices") == 0) {
-		while(!read_file.eof() /* getline(read_file, current_line) && current_line.find("faces")*/) {
+		while(!bad_input) {
 			read_file >> current_vertex.x >> current_vertex.y >> current_vertex.z; 
-			//handle vertices here
-			//TrimSpaces(current_line);
-			//ExtractVertices(&current_vertex, current_line, delimeter);
-			vertices->push_back(current_vertex);
+					
+			if(!read_file) {
+				bad_input = 1;
+				read_file.clear();
+				read_file >> current_line;
+			} else {
+				vertices->push_back(current_vertex);
+			}
 		}
 	}
 
-	read_file >> current_line;
-
 	if(current_line.find("faces") == 0) {
-		while(getline(read_file, current_line)) {
+		while(!read_file.eof()) {
 			//handle faces here
-			TrimSpaces(current_line);
-			ExtractFaces(&current_face, current_line, delimeter);
+
+			read_file >> array_size;
+			int* face_values = new int[array_size];
+			
+			for(int i = 0; i < array_size; i++) {
+				read_file >> face_values[i];
+			}
+
+			current_face.set_number_of_vertices(array_size);
+			current_face.set_face_values(face_values);
+			delete[] face_values;
+			face_values = NULL;
+
 			faces->push_back(current_face);
 		}
 	}
 	read_file.close();
-}
-
-string FileLoader::TrimSpaces(string& current_line) {
-	int starting_position = current_line.find_first_not_of(" \t");
-	int end_position = current_line.find_last_not_of(" \t");
-
-	if(starting_position == end_position)
-		current_line = "";
-	else 
-		current_line = current_line.substr(starting_position, end_position - starting_position+1);
-
-	return current_line;
-}
-
-void FileLoader::ExtractVertices(Vertex* current_vertex, string& current_line, string& delimeter) {
-	double x, y, z;
-	string modified_string;
-	int current_pos = 0, previous_pos = 0;
-
-	current_pos = current_line.find(delimeter, current_pos);
-	modified_string = current_line.substr(previous_pos, current_pos - previous_pos+1);
-	current_pos += delimeter.size();
-	previous_pos = current_pos;
-	x = atof(modified_string.c_str());
-
-	current_pos = current_line.find(delimeter, current_pos);
-	modified_string = current_line.substr(previous_pos, current_pos - previous_pos+1);
-	current_pos += delimeter.size();
-	previous_pos = current_pos;
-	y = atof(modified_string.c_str());
-
-	current_pos = current_line.find(delimeter, current_pos);
-	modified_string = current_line.substr(previous_pos, current_pos - previous_pos+1);
-	z = atof(modified_string.c_str());
-
-	current_vertex->set_vertex(x, y, z);
-}
-
-void FileLoader::ExtractFaces(Face* current_face, string& current_line, string& delimeter) {
-	string modified_string;
-	int current_pos = current_line.find_first_of(delimeter) + delimeter.size();
-	int previous_pos = current_pos;
-
-	array_size = atoi(current_line.substr(0, current_line.find_first_of(delimeter)).c_str());
-	int* face_values = new int[array_size];
-
-	for(int i = 0; i < array_size; i++) {
-		current_pos = current_line.find(delimeter, current_pos);
-		modified_string = current_line.substr(previous_pos, current_pos - previous_pos+1);
-		face_values[i] = atoi(modified_string.c_str());
-		current_pos += delimeter.size();
-		previous_pos = current_pos;
-	}
-
-	current_face->set_number_of_vertices(array_size);
-	current_face->set_face_values(face_values);
-	delete[] face_values;
-	face_values = NULL;
 }
