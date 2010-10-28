@@ -53,16 +53,20 @@ void FileLoader::ParseFile(string& file_name) {
 
 	read_file.open(file_name, ios::in);
 
-	getline(read_file, current_line);
+	read_file >> current_line;
+	//getline(read_file, current_line);
 	
 	if(current_line.find("vertices") == 0) {
-		while(getline(read_file, current_line) && current_line.find("faces")) {
+		while(!read_file.eof() /* getline(read_file, current_line) && current_line.find("faces")*/) {
+			read_file >> current_vertex.x >> current_vertex.y >> current_vertex.z; 
 			//handle vertices here
-			TrimSpaces(current_line);
-			ExtractVertices(&current_vertex, current_line, delimeter);
+			//TrimSpaces(current_line);
+			//ExtractVertices(&current_vertex, current_line, delimeter);
 			vertices->push_back(current_vertex);
 		}
 	}
+
+	read_file >> current_line;
 
 	if(current_line.find("faces") == 0) {
 		while(getline(read_file, current_line)) {
