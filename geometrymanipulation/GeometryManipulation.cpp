@@ -15,9 +15,9 @@ int main() {
 	ProgramTimer pt;	
 	pt.set_start_time();
 
-	//string input_file = "teapot.txt";
-	FileLoader* loader = new FileLoader();
-	//FileLoader* loader = new FileLoader(input_file);
+	string input_file = "shark.txt";
+	//FileLoader* loader = new FileLoader();
+	FileLoader* loader = new FileLoader(input_file);
 	//loader->get_vertices_vector();
 	//loader->get_faces_vector();
 
