@@ -17,6 +17,4 @@ public:
 	Vertex get_normal_vector(Vertex& A, Vertex& B);
 	Vertex get_normal_vector(Vertex& A, Vertex& B, Vertex& C);
 	void do_vector_translation(Vertex& A, Vertex& input_vector);
-	//Vertex do_uniform_scaling(double scalar, Vertex& A);
-	//Vertex do_axis_scaling(Vertex& A, char axis, double scaling_value);
 };
