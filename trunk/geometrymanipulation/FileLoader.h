@@ -11,8 +11,8 @@ public:
 	FileLoader();
 	FileLoader(string& file_name);
 	~FileLoader();
-	void get_vertices_vector();
-	void get_faces_vector();
+	//friend ostream& operator<<(ostream& ostr, const Vertex& current_vertex);
+	//friend ostream& operator<<(ostream& ostr, const Face& current_face);
 private:
 	string current_file;
 	fstream read_file;

@@ -25,10 +25,10 @@ public:
 	void do_axis_rotation(char axis, double angle, Matrix& A);
 	void do_free_rotation(Vertex& arbitrary_axis, double angle, Matrix& A);
 
-private:
-	VectorManipulations* manipulated_vector;
 	Matrix get_uniform_scaling_matrix(int size, int scaling_factor);
 	Matrix get_translation_matrix(int size, Vertex& translating_vector);
 	Matrix get_axis_rotation_matrix(int size, char axis, double angle);
 	Matrix get_free_rotation_matrix(int size, Vertex& arbitrary_axis, double angle);
+private:
+	VectorManipulations* manipulated_vector;
 };

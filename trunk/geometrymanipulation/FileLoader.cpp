@@ -1,4 +1,5 @@
 #include "FileLoader.h"
+#include "ProgramTimer.h"
 #include <iostream>
 
 using namespace std;
@@ -27,6 +28,7 @@ FileLoader::~FileLoader() {
 	delete faces;
 }
 
+//need to move it into the vertex class
 void FileLoader::get_vertices_vector() {
 	//print the contents of the vertices vector
 	for(vector<Vertex>::iterator i = vertices->begin(); i != vertices->end(); ++i) {
@@ -34,6 +36,7 @@ void FileLoader::get_vertices_vector() {
 	}
 }
 
+//need to move it into the face class
 void FileLoader::get_faces_vector() {
 	//print the contents of the faces vector
 	vector<int> items;
@@ -46,12 +49,17 @@ void FileLoader::get_faces_vector() {
 }
 
 void FileLoader::ParseFile(string& file_name) {
+	ProgramTimer pt_1;	
+	ProgramTimer pt_2;
+
 	string current_line, delimeter = " ";
 	int i = 0, j = 0, bad_input = 0, array_size;
 	Vertex current_vertex;
 	Face current_face;
 
 	read_file.open(file_name, ios::in);
+
+	pt_1.set_start_time();
 
 	read_file >> current_line;
 	//getline(read_file, current_line);
@@ -69,6 +77,11 @@ void FileLoader::ParseFile(string& file_name) {
 			}
 		}
 	}
+	pt_1.set_end_time();
+
+	cout << "execution of vertices extraction took " << pt_1.get_execution_time() << " seconds" << endl;
+
+	pt_2.set_start_time();
 
 	if(current_line.find("faces") == 0) {
 		while(!read_file.eof()) {
@@ -89,5 +102,10 @@ void FileLoader::ParseFile(string& file_name) {
 			faces->push_back(current_face);
 		}
 	}
+
+	pt_2.set_end_time();
+
+	cout << "execution of faces extraction took " << pt_2.get_execution_time() << " seconds" << endl;
+
 	read_file.close();
 }

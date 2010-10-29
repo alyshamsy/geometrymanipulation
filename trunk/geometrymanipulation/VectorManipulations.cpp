@@ -108,7 +108,8 @@ Vertex VectorManipulations::get_normal_vector(Vertex& A, Vertex& B) {
 }
 
 Vertex VectorManipulations::get_normal_vector(Vertex& A, Vertex& B, Vertex& C) {
-	Vertex normal_vector;
+	//check if any of the 2 vertices are the same then pass an error
+	Vertex normal_unit_vector;
 
 	Vertex X;
 	Vertex Y;
@@ -116,40 +117,12 @@ Vertex VectorManipulations::get_normal_vector(Vertex& A, Vertex& B, Vertex& C) {
 	X = A - B;
 	Y = B - C;
 
-	normal_vector = get_normal_vector(X, Y);
+	normal_unit_vector = get_unit_vector(get_normal_vector(X, Y));
 
-	return normal_vector;
+	return normal_unit_vector;
 }
 
 void VectorManipulations::do_vector_translation(Vertex& A, Vertex& input_vector) {
 
 	A = A + input_vector;
 }
-
-/*
-Vertex* VectorManipulations::do_uniform_scaling(double scalar, Vertex* A) {
-	Vertex* scalar_vector = new Vertex();
-
-	scalar_vector->x = scalar * A->x;
-	scalar_vector->y = scalar * A->y;
-	scalar_vector->z = scalar * A->z;
-
-	return scalar_vector;
-}
-
-Vertex* VectorManipulations::do_axis_scaling(Vertex* A, char axis, double scaling_value) {
-	Vertex* axis_scaling = new Vertex();
-
-	if(axis == 'x') {
-		axis_scaling->x = scaling_value * A->x;
-	} else if(axis == 'y') {
-		axis_scaling->y = scaling_value * A->y;
-	} else if(axis == 'z') {
-		axis_scaling->z = scaling_value * A->z;
-	} else {
-		return NULL;
-	}
-
-	return axis_scaling;
-}
-*/

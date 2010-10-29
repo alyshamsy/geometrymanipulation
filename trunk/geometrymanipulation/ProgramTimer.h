@@ -1,3 +1,6 @@
+#ifndef PROGRAM_TIMER_H
+#define PROGRAM_TIMER_H
+
 #include <time.h>
 
 class ProgramTimer {
@@ -13,3 +16,5 @@ private:
 	int start_time;
 	int end_time;
 };
+
+#endif;
