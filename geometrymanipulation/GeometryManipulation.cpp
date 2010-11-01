@@ -18,7 +18,7 @@ void HandleCustomCommands(vector<string>& custom_commands) {
 }
 
 int main() {
-	int input;
+	int input = 1;
 	char sub_input, exit;
 
 	cout << "Welcome to Aly's world of Geometry Manipulation \n" << endl;
@@ -26,8 +26,8 @@ int main() {
 	while(input != 0) {
 		cout << "Please select one of the following options:" << endl;
 		cout << "	1 - To run an existing script" << endl;
-		cout << "	2 - To run a set of pre-determined commands" << endl;
-		cout << "	3 - To run custom commands" << endl;
+		cout << "	2 - To run custom commands" << endl;
+		cout << "	3 - To run a set of pre-determined commands" << endl;
 		cout << "	0 - To exit" << endl;
 
 		cin >> input;
@@ -85,11 +85,12 @@ int main() {
 		case 3:
 			bool file_loaded = false;
 			FileLoader* loader = new FileLoader();
+			sub_input = 'a';
 
 			while(sub_input != 'i') {
 				cout << "Please select from one of the following options:" << endl;
 				cout << "a - Load a geometry file" << endl;
-				if(!file_loaded) {
+				if(file_loaded) {
 					cout << "b - Print the current geometry to screen" << endl;
 					cout << "c - Save the current geometry to file" << endl;
 					cout << "d - Translate by a specified vector" << endl;
