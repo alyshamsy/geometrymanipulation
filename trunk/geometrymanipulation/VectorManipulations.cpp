@@ -111,13 +111,19 @@ Vertex VectorManipulations::get_normal_vector(Vertex& A, Vertex& B, Vertex& C) {
 	//check if any of the 2 vertices are the same then pass an error
 	Vertex normal_unit_vector;
 
-	Vertex X;
-	Vertex Y;
+	if(A == B || A == C || B == C) {
+		normal_unit_vector.x = 0.0;
+		normal_unit_vector.y = 0.0;
+		normal_unit_vector.z = 0.0;
+	} else {
+		Vertex X;
+		Vertex Y;
 
-	X = A - B;
-	Y = B - C;
+		X = A - B;
+		Y = B - C;
 
-	normal_unit_vector = get_unit_vector(get_normal_vector(X, Y));
+		normal_unit_vector = get_unit_vector(get_normal_vector(X, Y));
+	}
 
 	return normal_unit_vector;
 }

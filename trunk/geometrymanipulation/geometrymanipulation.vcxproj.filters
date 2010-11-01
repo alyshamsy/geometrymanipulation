@@ -47,6 +47,9 @@
     <None Include="teapot.txt">
       <Filter>Resource Files</Filter>
     </None>
+    <None Include="teapot_normals.txt">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Face.cpp">

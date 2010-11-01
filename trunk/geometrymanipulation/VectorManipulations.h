@@ -1,3 +1,6 @@
+#ifndef Vector_Manipulation_H
+#define Vector_Manipulation_H
+
 #include "Vertex.h"
 
 class VectorManipulations {
@@ -18,3 +21,4 @@ public:
 	Vertex get_normal_vector(Vertex& A, Vertex& B, Vertex& C);
 	void do_vector_translation(Vertex& A, Vertex& input_vector);
 };
+#endif

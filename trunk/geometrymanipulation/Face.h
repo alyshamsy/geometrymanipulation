@@ -18,7 +18,7 @@ public:
 	void set_number_of_vertices(int vertices);
 	int get_number_of_vertices();
 
-	ostream& operator<<(ostream& ostr, const Vertex& current_vertex);
+	//ostream& operator<<(ostream& ostr, const Face& current_face);
 
 private:
 	vector<int> face;
