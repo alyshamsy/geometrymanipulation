@@ -1,3 +1,6 @@
+#ifndef Matrix_Manipulation_H
+#define Matrix_Manipulation_H
+
 #include "Matrix.h"
 #include "Vertex.h"
 #include "VectorManipulations.h"
@@ -32,3 +35,4 @@ public:
 private:
 	VectorManipulations* manipulated_vector;
 };
+#endif

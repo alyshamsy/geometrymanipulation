@@ -1,5 +1,5 @@
-#ifndef MATRIX_H
-#define MATRIX_H
+#ifndef Matrix_H
+#define Matrix_H
 
 class Matrix {
 public:

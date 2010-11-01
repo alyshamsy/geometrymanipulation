@@ -40,3 +40,20 @@ Vertex& Vertex::operator=(const Vertex& rhs) {
 
 	return (*this);
 }
+
+bool Vertex::operator==(const Vertex& rhs) {
+	if(this->x == rhs.x && this->y == rhs.y && this->z == rhs.z) {
+		return true;
+	} else {
+		return false;
+	}
+}
+
+/*
+ostream& operator<<(ostream& ostr, const Vertex& current_vertex) {
+	//print the contents of the vertices vector
+	cout << current_vertex.x << "\t" << current_vertex.y << "\t" << current_vertex.z << endl;
+
+	return ostr;
+}
+*/

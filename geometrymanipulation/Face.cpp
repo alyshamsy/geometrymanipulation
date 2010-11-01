@@ -43,3 +43,14 @@ void Face::set_number_of_vertices(int vertices) {
 int Face::get_number_of_vertices() {
 	return number_of_vertices;
 }
+
+/*
+ostream& operator<<(ostream& ostr, const Face& current_face) {
+	int size = current_face.get_number_of_vertices();
+	for ( int j = 0; j < size; j++ )
+		ostr << current_face[j] << "\t";
+	ostr << '\n';
+
+	return ostr;
+}
+*/

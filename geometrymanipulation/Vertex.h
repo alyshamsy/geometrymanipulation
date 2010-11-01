@@ -10,7 +10,8 @@ public:
 	void set_vertex(double a, double b, double c);
 
 	Vertex& operator=(const Vertex& rhs);
-	ostream& operator<<(ostream& ostr, const Face& current_face);
+	bool operator==(const Vertex& rhs);
+	//ostream& operator<<(ostream& ostr, const Vertex& current_vertex);
 
 	double x, y, z;
 };
