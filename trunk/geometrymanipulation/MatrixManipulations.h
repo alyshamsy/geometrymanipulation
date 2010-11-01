@@ -23,6 +23,10 @@ public:
 	friend Matrix operator-(Matrix& A, Matrix& B);
 	friend Matrix operator*(Matrix& A, Matrix& B);
 
+	void print_matrix(Matrix& A);
+
+	Vertex generate_vertex_from_matrix(Matrix& A);
+
 	void do_uniform_scaling(int scaling_factor, Matrix& A);
 	void do_matrix_translation(Vertex& translating_vector, Matrix& A);
 	void do_axis_rotation(char axis, double angle, Matrix& A);

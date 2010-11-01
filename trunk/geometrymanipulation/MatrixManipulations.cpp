@@ -162,15 +162,41 @@ Matrix operator*(Matrix& A, Matrix& B) {
 				element += A.get_matrix_element(i, k) * B.get_matrix_element(k, j);
 			}
 			multiplied_matrix.set_matrix_element(i, j, element);
+			element = 0.0;
 		}	
 	}
 
 	return multiplied_matrix;
 }
 
+void MatrixManipulations::print_matrix(Matrix& A) {
+	for(int i = 0; i < A.get_rows(); i++) {
+		for(int j = 0; j < A.get_columns(); j++) {
+			cout << A.get_matrix_element(i, j) << "\t";
+		}
+		cout << "\n";
+	}
+	cout << "\n";
+}
+
+Vertex MatrixManipulations::generate_vertex_from_matrix(Matrix& A) {
+	Vertex converted_vertex;
+
+	if(A.get_rows() == 1) {
+		converted_vertex.x = A.get_matrix_element(0, 0);
+		converted_vertex.y = A.get_matrix_element(0, 1);
+		converted_vertex.z = A.get_matrix_element(0, 2);
+	} else {
+		converted_vertex.x = A.get_matrix_element(0, 0);
+		converted_vertex.y = A.get_matrix_element(1, 0);
+		converted_vertex.z = A.get_matrix_element(2, 0);
+	}
+
+	return converted_vertex;
+}
+
 void MatrixManipulations::do_uniform_scaling(int scaling_factor, Matrix& A) {
 	int rows = A.get_rows();
-	
 	A = get_uniform_scaling_matrix(rows, scaling_factor)*A;
 }
 
