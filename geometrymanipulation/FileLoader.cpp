@@ -34,6 +34,11 @@ int FileLoader::GenerateNormals(string& file_name) {
 	//generate normals by calling the get_normal_vector(Vertex& A, Vertex& B, Vertex& C) method from VectorArithmetic class
 	//store the normal vertices to the normals vector<Vertex>
 	//print the normals vector to file
+	ProgramTimer normals_calculation;
+	ProgramTimer normals_file_saver;
+
+	normals_calculation.set_start_time();
+
 	fstream normals_file;
 	normals_file.open(file_name, ios::out);
 
@@ -49,8 +54,18 @@ int FileLoader::GenerateNormals(string& file_name) {
 		current_normal = vector_manipulations.get_normal_vector(A, B, C);
 		normals->push_back(current_normal);
 	}
+	
+	normals_calculation.set_end_time();
 
+	normals_file_saver.set_start_time();
+
+	normals_file << "normals" << endl;
 	normals_file << normals << endl;
+
+	normals_file_saver.set_end_time();
+
+	cout << "Normals are calculated in " << normals_calculation.get_execution_time() << " seconds" << endl;
+	cout << "Normals are saved to file in " << normals_file_saver.get_execution_time() << " seconds" << endl;
 
 	normals->clear();
 	delete normals;
@@ -74,6 +89,7 @@ ostream& operator<<(ostream& ostr, vector<Face>* current_faces) {
 	vector<int> items;
 	for (vector<Face>::iterator i = current_faces->begin(); i != current_faces->end(); ++i) {
 		items = i->get_face_values();
+		ostr << i->get_number_of_vertices() << "\t";
 		for (int j = 0; j < items.size(); j++)
 			ostr << items[j] << "\t";
 		ostr << '\n';
@@ -83,17 +99,13 @@ ostream& operator<<(ostream& ostr, vector<Face>* current_faces) {
 }
 
 int FileLoader::ParseFile(string& file_name) {
-	ProgramTimer pt_1;	
-	ProgramTimer pt_2;
+	ProgramTimer vertices_loader;	
+	ProgramTimer faces_loader;
 
 	string current_line, delimeter = " ";
 	int i = 0, j = 0, bad_input = 0, array_size;
 	Vertex current_vertex;
 	Face current_face;
-
-	if(!read_file.is_open()) {
-		return 1;
-	}
 
 	read_file.open(file_name, ios::in);
 	
@@ -101,7 +113,7 @@ int FileLoader::ParseFile(string& file_name) {
 		return 1;
 	}
 
-	pt_1.set_start_time();
+	vertices_loader.set_start_time();
 
 	read_file >> current_line;
 	//getline(read_file, current_line);
@@ -120,11 +132,11 @@ int FileLoader::ParseFile(string& file_name) {
 		}
 		bad_input = 0;
 	}
-	pt_1.set_end_time();
+	vertices_loader.set_end_time();
 
-	cout << "execution of vertices extraction took " << pt_1.get_execution_time() << " seconds" << endl;
+	cout << "loading of " << vertices->size() << " vertices took " << vertices_loader.get_execution_time() << " seconds" << endl;
 
-	pt_2.set_start_time();
+	faces_loader.set_start_time();
 
 	if(current_line.find("faces") == 0) {
 		while(!bad_input) {
@@ -152,9 +164,9 @@ int FileLoader::ParseFile(string& file_name) {
 		}
 	}
 
-	pt_2.set_end_time();
+	faces_loader.set_end_time();
 
-	cout << "execution of faces extraction took " << pt_2.get_execution_time() << " seconds" << endl;
+	cout << "loading of " << faces->size() << " faces took " << faces_loader.get_execution_time() << " seconds" << endl;
 
 	read_file.close();
 
