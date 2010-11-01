@@ -9,7 +9,53 @@
 
 using namespace std;
 
+void HandleCustomCommands(vector<string>& custom_commands, FileLoader* file_loader, bool& file_loaded) {
+	MatrixManipulations matrix_handler;
+	fstream script_handler;
+	int bad_input = 0;
+	int i = 0;
+
+	while(!custom_commands.at(i).compare("load")) {
+		custom_commands.erase(custom_commands.begin() + i);
+	}
+
+	string input_file = custom_commands.at(i+1);
+	int load_file = file_loader->LoadNewFile(input_file);
+
+	if(load_file == 0) {
+		file_loaded = true;
+		cout << input_file << " loaded successfully!" << endl;
+
+		for(int j = 0; j < custom_commands.size(); j++) {
+			if(custom_commands.at(j).compare("translate")) {
+				Vertex translated_vertex;
+				//extract doubles from the string at j+1
+			} else if(custom_commands.at(j).compare("scale")) {
+
+			} else if(custom_commands.at(j).compare("axis-rotate")) {
+
+			} else if(custom_commands.at(j).compare("free-rotate")) {
+
+			} else if(custom_commands.at(j).compare("print")) {
+
+			} else if(custom_commands.at(j).compare("save")) {
+
+			} else if(custom_commands.at(j).compare("normals")) {
+
+			} else {
+				cout << custom_commands.at(j) << " could not be recognized and has not been executed. The script loading has been terminated." << endl;
+				script_handler.close();
+				return;
+			}
+		}
+	} else {
+		cout << input_file << " is either open or does not exist. Please take appropriate action" << endl;
+		return;
+	}
+}
+
 void HandleScript(string& script_file, FileLoader* file_loader, bool& file_loaded) {
+	MatrixManipulations matrix_handler;
 	fstream script_handler;
 	int bad_input = 0;
 
@@ -17,6 +63,7 @@ void HandleScript(string& script_file, FileLoader* file_loader, bool& file_loade
 
 	if(!script_handler) {
 		cout << "Script file does not exist. Please provide a valid script file" << endl;
+		return;
 	} else {
 		string command;
 		vector<string> command_set;
@@ -26,12 +73,8 @@ void HandleScript(string& script_file, FileLoader* file_loader, bool& file_loade
 			command_set.push_back(command);
 		}
 
-
+		HandleCustomCommands(command_set, file_loader, file_loaded);
 	}
-}
-
-void HandleCustomCommands(vector<string>& custom_commands, FileLoader* file_loader, bool& file_loaded) {
-
 }
 
 int main() {
