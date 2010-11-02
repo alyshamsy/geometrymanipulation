@@ -1,0 +1,15 @@
+load
+teapot.txt
+scale
+10
+translate
+3 3 3
+axis-rotate
+x 45
+free-rotate
+2 2 2 45
+print
+normals
+script_normals.txt
+save
+script_output.txt
