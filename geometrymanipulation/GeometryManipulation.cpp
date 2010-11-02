@@ -2,6 +2,7 @@
 #include <math.h>
 #include <string>
 #include <fstream>
+#include <sstream>
 #include "VectorManipulations.h"
 #include "MatrixManipulations.h"
 #include "FileLoader.h"
@@ -13,35 +14,106 @@ void HandleCustomCommands(vector<string>& custom_commands, FileLoader* file_load
 	MatrixManipulations matrix_handler;
 	fstream script_handler;
 	int bad_input = 0;
-	int i = 0;
+	int start = 0;
 
-	while(!custom_commands.at(i).compare("load")) {
-		custom_commands.erase(custom_commands.begin() + i);
+	while(!custom_commands.at(start).compare("load")) {
+		custom_commands.erase(custom_commands.begin() + start);
 	}
 
-	string input_file = custom_commands.at(i+1);
+	string input_file = custom_commands.at(start);
 	int load_file = file_loader->LoadNewFile(input_file);
 
 	if(load_file == 0) {
 		file_loaded = true;
 		cout << input_file << " loaded successfully!" << endl;
+		custom_commands.erase(custom_commands.begin() + start);
 
 		for(int j = 0; j < custom_commands.size(); j++) {
-			if(custom_commands.at(j).compare("translate")) {
+			if(custom_commands.at(j).compare("translate") == 0) {
 				Vertex translated_vertex;
-				//extract doubles from the string at j+1
-			} else if(custom_commands.at(j).compare("scale")) {
+				stringstream translate_vector(stringstream::in | stringstream::out);
+				translate_vector << custom_commands.at(++j);
+				translate_vector >> translated_vertex.x >> translated_vertex.y >> translated_vertex.z;
 
-			} else if(custom_commands.at(j).compare("axis-rotate")) {
+				int vertices_vector_size = file_loader->vertices->size();
+				for(int i = 0; i < vertices_vector_size; i++) {
+					file_loader->vertices->at(i) = translated_vertex + file_loader->vertices->at(i);
+				}
+			} else if(custom_commands.at(j).compare("scale") == 0) {
+				int scaling_value;
 
-			} else if(custom_commands.at(j).compare("free-rotate")) {
+				stringstream scaler(stringstream::in | stringstream::out);
+				scaler << custom_commands.at(++j);
+				scaler >> scaling_value;
 
-			} else if(custom_commands.at(j).compare("print")) {
+				int vertices_vector_size = file_loader->vertices->size();
+				for(int i = 0; i < vertices_vector_size; i++) {
+					Matrix current_matrix = matrix_handler.generate_column_vector(file_loader->vertices->at(i));
+					matrix_handler.do_uniform_scaling(scaling_value, current_matrix);
+					file_loader->vertices->at(i) = matrix_handler.generate_vertex_from_matrix(current_matrix);
+				}
+			} else if(custom_commands.at(j).compare("axis-rotate") == 0) {
+				char axis;
+				double angle;
 
-			} else if(custom_commands.at(j).compare("save")) {
+				stringstream axis_rotate(stringstream::in | stringstream::out);
+				axis_rotate << custom_commands.at(++j);
+				axis_rotate >> axis >> angle;
 
-			} else if(custom_commands.at(j).compare("normals")) {
+				if(axis == 'x' || axis == 'y' || axis == 'z') {
+					int vertices_vector_size = file_loader->vertices->size();
+					for(int i = 0; i < vertices_vector_size; i++) {
+						Matrix current_matrix = matrix_handler.generate_column_vector(file_loader->vertices->at(i));
+						matrix_handler.do_axis_rotation(axis, angle, current_matrix);
+						file_loader->vertices->at(i) = matrix_handler.generate_vertex_from_matrix(current_matrix);
+					}
+				} else {
+					cout << "Please provide a correct axis x, y or z" << endl;
+				}
+			} else if(custom_commands.at(j).compare("free-rotate") == 0) {
+				Vertex arbitrary_axis_vertex;
+				double angle;
 
+				stringstream free_rotate(stringstream::in | stringstream::out);
+				free_rotate << custom_commands.at(++j);
+				free_rotate >> arbitrary_axis_vertex.x >> arbitrary_axis_vertex.y >> arbitrary_axis_vertex.z >> angle;
+
+				int vertices_vector_size = file_loader->vertices->size();
+				for(int i = 0; i < vertices_vector_size; i++) {
+					Matrix current_matrix = matrix_handler.generate_column_vector(file_loader->vertices->at(i));
+					matrix_handler.do_free_rotation(arbitrary_axis_vertex, angle, current_matrix);
+					file_loader->vertices->at(i) = matrix_handler.generate_vertex_from_matrix(current_matrix);
+				}
+			} else if(custom_commands.at(j).compare("print") == 0) {
+				cout << "\nvertices" << endl;
+				cout << file_loader->vertices << endl;
+				cout << "faces" << endl;
+				cout << file_loader->faces << endl;
+			} else if(custom_commands.at(j).compare("save") == 0) {
+				fstream file_saver;
+				string save_file = custom_commands.at(++j);
+
+				file_saver.open(save_file, ios::out);
+
+				if(file_saver.is_open()) {						
+					file_saver << "vertices" << endl;
+					file_saver << file_loader->vertices << endl;
+					file_saver << "faces" << endl;
+					file_saver << file_loader->faces << endl;
+					file_saver.close();
+					cout << save_file << " was saved successfully" << endl;
+				} else {
+					cout << save_file << " is currently open. Please close the file and retry saving" << endl;
+				}
+			} else if(custom_commands.at(j).compare("normals") == 0) {
+				string normals_file = custom_commands.at(++j);
+				fstream generate_normals_file(normals_file, ios::out);
+
+				if(generate_normals_file.is_open()) {
+					file_loader->GenerateNormals(normals_file);
+				} else {
+					cout << normals_file << " is currently open. Please close the file and retry saving" << endl;
+				}
 			} else {
 				cout << custom_commands.at(j) << " could not be recognized and has not been executed. The script loading has been terminated." << endl;
 				script_handler.close();
@@ -50,15 +122,18 @@ void HandleCustomCommands(vector<string>& custom_commands, FileLoader* file_load
 		}
 	} else {
 		cout << input_file << " is either open or does not exist. Please take appropriate action" << endl;
-		return;
 	}
+
+	return;
 }
 
 void HandleScript(string& script_file, FileLoader* file_loader, bool& file_loaded) {
 	MatrixManipulations matrix_handler;
 	fstream script_handler;
 	int bad_input = 0;
+	ProgramTimer script_handling;
 
+	script_handling.set_start_time();
 	script_handler.open(script_file, ios::in);
 
 	if(!script_handler) {
@@ -68,12 +143,16 @@ void HandleScript(string& script_file, FileLoader* file_loader, bool& file_loade
 		string command;
 		vector<string> command_set;
 
-		while(!bad_input) {
-			script_handler >> command;
+		while(!bad_input && !script_handler.eof()) {
+			getline(script_handler, command);
 			command_set.push_back(command);
 		}
 
 		HandleCustomCommands(command_set, file_loader, file_loaded);
+		script_handling.set_end_time();
+
+		cout << "Handling of the script file took " << script_handling.get_execution_time() << " seconds" << endl;
+		return;
 	}
 }
 
@@ -129,6 +208,7 @@ int main() {
 				int done = 0;
 				string command;
 				vector<string> command_set;
+				ProgramTimer custom_commands_handling;
 
 				cout << "Please type in your custom commands. Type done when finished" << endl;
 
@@ -142,7 +222,11 @@ int main() {
 					}
 				}
 
+				custom_commands_handling.set_start_time();
 				HandleCustomCommands(command_set, loader, file_loaded);
+				custom_commands_handling.set_end_time();
+
+				cout << "Handling of the custom commands took " << custom_commands_handling.get_execution_time() << " seconds" << endl;
 			} else if(sub_input == 'b') {
 				//b - To go back to the main menu
 				break;

@@ -1,6 +1,7 @@
 #include "MatrixManipulations.h"
 #include <iostream>
 
+#define PI 3.14159265
 using namespace std;
 
 MatrixManipulations::MatrixManipulations() {
@@ -246,6 +247,7 @@ Matrix MatrixManipulations::get_translation_matrix(int size, Vertex& translating
 
 Matrix MatrixManipulations::get_axis_rotation_matrix(int size, char axis, double angle) {
 	Matrix axis_rotation_matrix(0.0, size, size);
+	angle = angle*(PI/180);
 	double C = cos(angle), S = sin(angle);
 
 	if(size == 4)
@@ -280,6 +282,7 @@ Matrix MatrixManipulations::get_axis_rotation_matrix(int size, char axis, double
 
 Matrix MatrixManipulations::get_free_rotation_matrix(int size, Vertex& arbitrary_axis, double angle) {
 	Matrix free_rotation_matrix(0.0, size, size);
+	angle = angle*(PI/180);
 
 	if(size == 4)
 		free_rotation_matrix.set_matrix_element(3, 3, 1.0);
