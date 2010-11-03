@@ -40,8 +40,7 @@ void HandleCommands(vector<string>& custom_commands, FileLoader* file_loader, bo
 					translate_vector << custom_commands.at(++j);
 					translate_vector >> translation_vertex.x >> translation_vertex.y >> translation_vertex.z;
 
-					multiplier = multiplier*matrix_handler.get_translation_matrix(size, translation_vertex);
-					matrix_handler.print_matrix(multiplier);
+					multiplier = matrix_handler.get_translation_matrix(size, translation_vertex)*multiplier;
 					j++;
 				} else if(custom_commands.at(j).compare("scale") == 0) {
 					int scaling_value;
@@ -50,8 +49,7 @@ void HandleCommands(vector<string>& custom_commands, FileLoader* file_loader, bo
 					scaler << custom_commands.at(++j);
 					scaler >> scaling_value;
 
-					multiplier = multiplier*matrix_handler.get_uniform_scaling_matrix(size, scaling_value);
-					matrix_handler.print_matrix(multiplier);
+					multiplier = matrix_handler.get_uniform_scaling_matrix(size, scaling_value)*multiplier;
 					j++;
 				} else if(custom_commands.at(j).compare("axis-rotate") == 0) {
 					char axis;
@@ -62,8 +60,7 @@ void HandleCommands(vector<string>& custom_commands, FileLoader* file_loader, bo
 					axis_rotate >> axis >> angle;
 
 					if(axis == 'x' || axis == 'y' || axis == 'z') {
-						multiplier = multiplier*matrix_handler.get_axis_rotation_matrix(size, axis, angle);
-						matrix_handler.print_matrix(multiplier);
+						multiplier = matrix_handler.get_axis_rotation_matrix(size, axis, angle)*multiplier;
 					} else {
 						cout << "Please provide a correct axis x, y or z" << endl;
 					}
@@ -76,8 +73,7 @@ void HandleCommands(vector<string>& custom_commands, FileLoader* file_loader, bo
 					free_rotate << custom_commands.at(++j);
 					free_rotate >> arbitrary_axis_vertex.x >> arbitrary_axis_vertex.y >> arbitrary_axis_vertex.z >> angle;
 
-					multiplier = multiplier*matrix_handler.get_free_rotation_matrix(size, arbitrary_axis_vertex, angle);
-					matrix_handler.print_matrix(multiplier);
+					multiplier = matrix_handler.get_free_rotation_matrix(size, arbitrary_axis_vertex, angle)*multiplier;
 					j++;
 				} else {
 					cout << custom_commands.at(j) << " could not be recognized and has not been executed. The script loading has been terminated." << endl;
@@ -87,12 +83,11 @@ void HandleCommands(vector<string>& custom_commands, FileLoader* file_loader, bo
 
 			int vertices_vector_size = file_loader->vertices->size();
 			for(int i = 0; i < vertices_vector_size; i++) {
-				Matrix current_matrix = matrix_handler.generate_row_vector(file_loader->vertices->at(i), 4);
-				current_matrix = current_matrix*multiplier;
+				Matrix current_matrix = matrix_handler.generate_column_vector(file_loader->vertices->at(i), 4);
+				current_matrix = multiplier*current_matrix;
 				file_loader->vertices->at(i) = matrix_handler.generate_vertex_from_matrix(current_matrix);
 			}
 
-			matrix_handler.print_matrix(multiplier);
 			multiplier = matrix_handler.generate_identity_matrix(size);
 
 			if(custom_commands.at(j).compare("print") == 0) {
@@ -128,121 +123,6 @@ void HandleCommands(vector<string>& custom_commands, FileLoader* file_loader, bo
 					cout << normals_file << " is currently open. Please close the file and retry saving" << endl;
 				}
 				j++;
-			}
-		}
-	} else {
-		cout << input_file << " is either open or does not exist. Please take appropriate action" << endl;
-	}
-
-	return;
-}
-
-void HandleCustomCommands(vector<string>& custom_commands, FileLoader* file_loader, bool& file_loaded) {
-	MatrixManipulations matrix_handler;
-	int bad_input = 0;
-	int start = 0;
-
-	while(custom_commands.at(start).compare("load") != 0) {
-		custom_commands.erase(custom_commands.begin() + start);
-	}
-
-	string input_file = custom_commands.at(++start);
-	int load_file = file_loader->LoadNewFile(input_file);
-
-	if(load_file == 0) {
-		file_loaded = true;
-		cout << input_file << " loaded successfully!" << endl;
-		custom_commands.erase(custom_commands.begin(), custom_commands.begin()+start+1);
-
-		for(int j = 0; j < custom_commands.size(); j++) {
-			if(custom_commands.at(j).compare("translate") == 0) {
-				Vertex translated_vertex;
-				stringstream translate_vector(stringstream::in | stringstream::out);
-				translate_vector << custom_commands.at(++j);
-				translate_vector >> translated_vertex.x >> translated_vertex.y >> translated_vertex.z;
-
-				int vertices_vector_size = file_loader->vertices->size();
-				for(int i = 0; i < vertices_vector_size; i++) {
-					file_loader->vertices->at(i) = translated_vertex + file_loader->vertices->at(i);
-				}
-			} else if(custom_commands.at(j).compare("scale") == 0) {
-				int scaling_value;
-
-				stringstream scaler(stringstream::in | stringstream::out);
-				scaler << custom_commands.at(++j);
-				scaler >> scaling_value;
-
-				int vertices_vector_size = file_loader->vertices->size();
-				for(int i = 0; i < vertices_vector_size; i++) {
-					Matrix current_matrix = matrix_handler.generate_column_vector(file_loader->vertices->at(i), 3);
-					matrix_handler.do_uniform_scaling(scaling_value, current_matrix);
-					file_loader->vertices->at(i) = matrix_handler.generate_vertex_from_matrix(current_matrix);
-				}
-			} else if(custom_commands.at(j).compare("axis-rotate") == 0) {
-				char axis;
-				double angle;
-
-				stringstream axis_rotate(stringstream::in | stringstream::out);
-				axis_rotate << custom_commands.at(++j);
-				axis_rotate >> axis >> angle;
-
-				if(axis == 'x' || axis == 'y' || axis == 'z') {
-					int vertices_vector_size = file_loader->vertices->size();
-					for(int i = 0; i < vertices_vector_size; i++) {
-						Matrix current_matrix = matrix_handler.generate_column_vector(file_loader->vertices->at(i), 3);
-						matrix_handler.do_axis_rotation(axis, angle, current_matrix);
-						file_loader->vertices->at(i) = matrix_handler.generate_vertex_from_matrix(current_matrix);
-					}
-				} else {
-					cout << "Please provide a correct axis x, y or z" << endl;
-				}
-			} else if(custom_commands.at(j).compare("free-rotate") == 0) {
-				Vertex arbitrary_axis_vertex;
-				double angle;
-
-				stringstream free_rotate(stringstream::in | stringstream::out);
-				free_rotate << custom_commands.at(++j);
-				free_rotate >> arbitrary_axis_vertex.x >> arbitrary_axis_vertex.y >> arbitrary_axis_vertex.z >> angle;
-
-				int vertices_vector_size = file_loader->vertices->size();
-				for(int i = 0; i < vertices_vector_size; i++) {
-					Matrix current_matrix = matrix_handler.generate_column_vector(file_loader->vertices->at(i), 3);
-					matrix_handler.do_free_rotation(arbitrary_axis_vertex, angle, current_matrix);
-					file_loader->vertices->at(i) = matrix_handler.generate_vertex_from_matrix(current_matrix);
-				}
-			} else if(custom_commands.at(j).compare("print") == 0) {
-				cout << "\nvertices" << endl;
-				cout << file_loader->vertices << endl;
-				cout << "faces" << endl;
-				cout << file_loader->faces << endl;
-			} else if(custom_commands.at(j).compare("save") == 0) {
-				fstream file_saver;
-				string save_file = custom_commands.at(++j);
-
-				file_saver.open(save_file, ios::out);
-
-				if(file_saver.is_open()) {						
-					file_saver << "vertices" << endl;
-					file_saver << file_loader->vertices << endl;
-					file_saver << "faces" << endl;
-					file_saver << file_loader->faces << endl;
-					file_saver.close();
-					cout << save_file << " was saved successfully" << endl;
-				} else {
-					cout << save_file << " is currently open. Please close the file and retry saving" << endl;
-				}
-			} else if(custom_commands.at(j).compare("normals") == 0) {
-				string normals_file = custom_commands.at(++j);
-				fstream generate_normals_file(normals_file, ios::out);
-
-				if(generate_normals_file.is_open()) {
-					file_loader->GenerateNormals(normals_file);
-				} else {
-					cout << normals_file << " is currently open. Please close the file and retry saving" << endl;
-				}
-			} else {
-				cout << custom_commands.at(j) << " could not be recognized and has not been executed. The script loading has been terminated." << endl;
-				return;
 			}
 		}
 	} else {
@@ -354,7 +234,7 @@ int main() {
 				}
 
 				custom_commands_handling.set_start_time();
-				HandleCustomCommands(command_set, loader, file_loaded);
+				HandleCommands(command_set, loader, file_loaded);
 				custom_commands_handling.set_end_time();
 
 				cout << "Handling of the custom commands took " << custom_commands_handling.get_execution_time() << " seconds" << endl;

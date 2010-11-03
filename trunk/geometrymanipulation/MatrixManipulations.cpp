@@ -251,9 +251,9 @@ Matrix MatrixManipulations::get_uniform_scaling_matrix(int size, int scaling_fac
 Matrix MatrixManipulations::get_translation_matrix(int size, Vertex& translating_vector) {
 	Matrix translation_matrix = generate_identity_matrix(size);
 
-	translation_matrix.set_matrix_element(3, 0, translating_vector.x);
-	translation_matrix.set_matrix_element(3, 1, translating_vector.y);
-	translation_matrix.set_matrix_element(3, 2, translating_vector.z);
+	translation_matrix.set_matrix_element(0, 3, translating_vector.x);
+	translation_matrix.set_matrix_element(1, 3, translating_vector.y);
+	translation_matrix.set_matrix_element(2, 3, translating_vector.z);
 
 	return translation_matrix;
 }
