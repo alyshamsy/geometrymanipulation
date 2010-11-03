@@ -8,7 +8,6 @@ axis-rotate
 x 45
 free-rotate
 2 2 2 45
-print
 normals
 script_normals.txt
 save

@@ -49,22 +49,28 @@ Matrix MatrixManipulations::generate_identity_matrix(int size) {
 	return identity_matrix;
 }
 
-Matrix MatrixManipulations::generate_row_vector(Vertex& current_vertex) {
-	Matrix row_vector(0.0, 1, 3);
+Matrix MatrixManipulations::generate_row_vector(Vertex& current_vertex, int size) {
+	Matrix row_vector(0.0, 1, size);
 
 	row_vector.set_matrix_element(0, 0, current_vertex.x);
 	row_vector.set_matrix_element(0, 1, current_vertex.y);
 	row_vector.set_matrix_element(0, 2, current_vertex.z);
 
+	if(size == 4)
+		row_vector.set_matrix_element(0, 3, 1.0);
+
 	return row_vector;
 }
 
-Matrix MatrixManipulations::generate_column_vector(Vertex& current_vertex) {
-	Matrix column_vector(0.0, 3, 1);
+Matrix MatrixManipulations::generate_column_vector(Vertex& current_vertex, int size) {
+	Matrix column_vector(0.0, size, 1);
 
 	column_vector.set_matrix_element(0, 0, current_vertex.x);
 	column_vector.set_matrix_element(1, 0, current_vertex.y);
 	column_vector.set_matrix_element(2, 0, current_vertex.z);
+
+	if(size == 4)
+		column_vector.set_matrix_element(3, 0, 1.0);
 
 	return column_vector;
 }
@@ -182,15 +188,22 @@ void MatrixManipulations::print_matrix(Matrix& A) {
 
 Vertex MatrixManipulations::generate_vertex_from_matrix(Matrix& A) {
 	Vertex converted_vertex;
+	double h = 1;
 
 	if(A.get_rows() == 1) {
-		converted_vertex.x = A.get_matrix_element(0, 0);
-		converted_vertex.y = A.get_matrix_element(0, 1);
-		converted_vertex.z = A.get_matrix_element(0, 2);
+		if(A.get_columns() == 4)
+			h = A.get_matrix_element(0, 3);
+
+		converted_vertex.x = A.get_matrix_element(0, 0)/h;
+		converted_vertex.y = A.get_matrix_element(0, 1)/h;
+		converted_vertex.z = A.get_matrix_element(0, 2)/h;
 	} else {
-		converted_vertex.x = A.get_matrix_element(0, 0);
-		converted_vertex.y = A.get_matrix_element(1, 0);
-		converted_vertex.z = A.get_matrix_element(2, 0);
+		if(A.get_rows() == 4)
+			h = A.get_matrix_element(3, 0);
+
+		converted_vertex.x = A.get_matrix_element(0, 0)/h;
+		converted_vertex.y = A.get_matrix_element(1, 0)/h;
+		converted_vertex.z = A.get_matrix_element(2, 0)/h;
 	}
 
 	return converted_vertex;
@@ -238,9 +251,9 @@ Matrix MatrixManipulations::get_uniform_scaling_matrix(int size, int scaling_fac
 Matrix MatrixManipulations::get_translation_matrix(int size, Vertex& translating_vector) {
 	Matrix translation_matrix = generate_identity_matrix(size);
 
-	translation_matrix.set_matrix_element(0, 3, translating_vector.x);
-	translation_matrix.set_matrix_element(1, 3, translating_vector.y);
-	translation_matrix.set_matrix_element(2, 3, translating_vector.z);
+	translation_matrix.set_matrix_element(3, 0, translating_vector.x);
+	translation_matrix.set_matrix_element(3, 1, translating_vector.y);
+	translation_matrix.set_matrix_element(3, 2, translating_vector.z);
 
 	return translation_matrix;
 }
