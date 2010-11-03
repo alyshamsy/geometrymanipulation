@@ -1,0 +1,19 @@
+load
+shark.txt
+translate
+1.5 4.1 2.4
+scale
+-5
+axis-rotate
+x 45
+axis-rotate
+y -90
+axis-rotate
+z -180
+free-rotate
+3 4 9 60
+normals
+normals.out.txt
+print
+save
+script.out.txt
