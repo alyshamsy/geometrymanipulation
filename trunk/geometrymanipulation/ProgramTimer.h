@@ -3,6 +3,10 @@
 
 #include <time.h>
 
+/*
+This class is used to time the various functionality of the program
+*/
+
 class ProgramTimer {
 public:
 	ProgramTimer();

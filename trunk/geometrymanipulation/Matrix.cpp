@@ -4,6 +4,16 @@
 
 using namespace std;
 
+/*
+This is the default constructor of the matrix class which takes in 3 parameters initial value, number of rows and columns.
+The default value of these are:
+- initial value = 0.0
+- rows = 3
+- columns = 3
+
+The method uses the parameters provided to generate a 2D array on the heap
+*/
+
 Matrix::Matrix(double init_value, int rows, int columns):
 init_value(init_value),
 rows(rows),
@@ -16,6 +26,10 @@ columns(columns) {
 	}
 }
 
+/*
+This is the destructor which deletes the 2D array
+*/
+
 Matrix::~Matrix() {
 	for(int i = 0; i < rows; i++) 
 		delete [] matrix[i];
@@ -23,6 +37,10 @@ Matrix::~Matrix() {
 	delete [] matrix;
 	matrix = NULL;
 }
+
+/*
+This is the copy constructor which 
+*/
 
 Matrix::Matrix(const Matrix& src):
 rows(src.rows), columns(src.columns), matrix(new double*[src.rows])

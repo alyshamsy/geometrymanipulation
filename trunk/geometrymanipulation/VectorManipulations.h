@@ -3,6 +3,19 @@
 
 #include "Vertex.h"
 
+/*
+This class is used to do all the calculations on the vertices
+
+There are methods to:
+- calculate the magnitude of the vertices
+- get the dot and cross products of two vertices
+- get the angle between 2 vectors
+- get the unit vector
+- get the normal vector
+
+Also there are methods to do addition and subtraction operations between 2 vectors
+*/
+
 class VectorManipulations {
 public:
 	VectorManipulations();

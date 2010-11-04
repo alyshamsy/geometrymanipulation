@@ -9,6 +9,11 @@
 
 using namespace std;
 
+/*
+This class is used to load and save files along with generating normals and printing the vertices and faces of the object
+There are 2 vectors, one of type Vertex and one of type Face which stores the vertices and the faces
+*/
+
 class FileLoader {
 public:
 	FileLoader();
