@@ -2,12 +2,21 @@
 #include <math.h>
 #include "VectorManipulations.h"
 
+/*
+The default constructor
+*/
 VectorManipulations::VectorManipulations() {
 }
 
+/*
+The default destructor
+*/
 VectorManipulations::~VectorManipulations() {
 }
 
+/*
+returns the negation of the vertex provided as the paramete
+*/
 void VectorManipulations::get_vector_negation(Vertex& A) {
 
 	A.x = -(A.x);
@@ -16,6 +25,9 @@ void VectorManipulations::get_vector_negation(Vertex& A) {
 
 }
 
+/*
+returns the magnitude of the vertex by using the pythagorean formula
+*/
 double VectorManipulations::get_vector_magnitude(Vertex& A) {
 	double magnitude, x, y, z;
 
@@ -28,6 +40,9 @@ double VectorManipulations::get_vector_magnitude(Vertex& A) {
 	return magnitude;
 }
 
+/*
+the addition operation adds the 2 vertices provided and returns a vertex with the respective x, y and z variables added
+*/
 Vertex operator+(Vertex& A, Vertex& B) {
 	Vertex added_vector;
 
@@ -38,6 +53,9 @@ Vertex operator+(Vertex& A, Vertex& B) {
 	return added_vector;
 }
 
+/*
+the subtraction operation subtracts the 2 vertices provided and returns the vertex with the respective x, y and z variablessubtracted
+*/
 Vertex operator-(Vertex& A, Vertex& B) {
 	Vertex subtracted_vector;
 
@@ -48,6 +66,9 @@ Vertex operator-(Vertex& A, Vertex& B) {
 	return subtracted_vector;
 }
 
+/*
+return the unit vector of the parameter vertex provided by calculating the magnitude of the vertex and dividing each of the coordinates by the magnitude
+*/
 Vertex VectorManipulations::get_unit_vector(Vertex& A) {
 	Vertex unit_vector;
 	double magnitude = get_vector_magnitude(A);
@@ -59,6 +80,9 @@ Vertex VectorManipulations::get_unit_vector(Vertex& A) {
 	return unit_vector;
 }
 
+/*
+returns the dot product as a double value of the 2 vertices by multiplying the respective components
+*/
 double VectorManipulations::get_dot_product(Vertex& A, Vertex& B) {
 	double dot_product;
 
@@ -67,6 +91,9 @@ double VectorManipulations::get_dot_product(Vertex& A, Vertex& B) {
 	return dot_product;
 }
 
+/*
+returns the angle between the 2 vertices as a double value by calculating the dot product and the magnitudes and getting the arc cos of the dot product divided by the multiplication of the magnitudes of the 2 vertices
+*/
 double VectorManipulations::get_angle_between_vectors(Vertex& A, Vertex& B) {
 	double angle, dot_product, magnitude_A, magnitude_B;
 
@@ -79,6 +106,9 @@ double VectorManipulations::get_angle_between_vectors(Vertex& A, Vertex& B) {
 	return angle;
 }
 
+/*
+calculates the cross product of the 2 vertices and returns a vertex
+*/
 Vertex VectorManipulations::get_cross_product(Vertex& A, Vertex& B) {
 	Vertex cp_vector;
 
@@ -89,6 +119,9 @@ Vertex VectorManipulations::get_cross_product(Vertex& A, Vertex& B) {
 	return cp_vector;
 }
 
+/*
+calculates the normal vector of the 2 vertices provided by calculating the cross product and angle between them and their respective magnitudes
+*/
 Vertex VectorManipulations::get_normal_vector(Vertex& A, Vertex& B) {
 	double angle, denominator, magnitude_A, magnitude_B;
 	Vertex normal_vector;
@@ -107,8 +140,12 @@ Vertex VectorManipulations::get_normal_vector(Vertex& A, Vertex& B) {
 	return normal_vector;
 }
 
+/*
+uses method overloading
+
+calculates the normal of the 3 vertices provided. It first checks if any 2 vertices are the same. if yes then returns 0, 0, 0 else calculates 2 vertices and getting the normal vector between 2 vertices
+*/
 Vertex VectorManipulations::get_normal_vector(Vertex& A, Vertex& B, Vertex& C) {
-	//check if any of the 2 vertices are the same then pass an error
 	Vertex normal_unit_vector;
 
 	if(!(A == B || A == C || B == C)) {
@@ -124,7 +161,9 @@ Vertex VectorManipulations::get_normal_vector(Vertex& A, Vertex& B, Vertex& C) {
 	return normal_unit_vector;
 }
 
+/*
+computes vector translation by adding the 2 vertices provided
+*/
 void VectorManipulations::do_vector_translation(Vertex& A, Vertex& input_vector) {
-
 	A = A + input_vector;
 }

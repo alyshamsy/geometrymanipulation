@@ -27,8 +27,6 @@ public:
 	MatrixManipulations();
 	~MatrixManipulations();
 
-	bool is_matrix_square(Matrix& A);
-	Matrix generate_square_matrix(Matrix& current_matrix);
 	Matrix generate_identity_matrix(int size);
 	Matrix generate_row_vector(Vertex& current_vertex, int size);
 	Matrix generate_column_vector(Vertex& current_vertex, int size);

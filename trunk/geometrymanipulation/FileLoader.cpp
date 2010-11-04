@@ -5,14 +5,23 @@
 
 using namespace std;
 
+/*
+This specifies the static vectors of faces and vertices
+*/
 vector<Vertex>* FileLoader::vertices;
 vector<Face>* FileLoader::faces;
 
+/*
+The constructor which allocates memory on the heap for the vertex and the face vectors. Because no values have been provided, it initially creates a vector of size 1
+*/
 FileLoader::FileLoader() {
 	vertices = new vector<Vertex>();
 	faces = new vector<Face>();
 }
 
+/*
+The destructor which clears the vectors and the deletes them from the heap
+*/
 FileLoader::~FileLoader() {
 	vertices->clear();
 	faces->clear();
@@ -20,6 +29,11 @@ FileLoader::~FileLoader() {
 	delete faces;
 }
 
+/*
+The file loader method which clears the current vectors of faces and vertices and loads them with new values provided in the file 
+
+It then calls the ParseFile method to carry out the load
+*/
 int FileLoader::LoadNewFile(string& file_name) {
 	vertices->clear();
 	faces->clear();
@@ -29,11 +43,15 @@ int FileLoader::LoadNewFile(string& file_name) {
 	return success;
 }
 
+/*
+reads the face vector and gets the corresponding vertex from the vertices vector
+generates normals by calling the get_normal_vector(Vertex& A, Vertex& B, Vertex& C) method from VectorArithmetic class
+stores the normal vertices to the normals vector<Vertex>
+prints the normals vector to file
+
+It assumes the first 3 values of the vertices as obtained from the vector<Face> will be sufficient to generate the normals
+*/
 int FileLoader::GenerateNormals(string& file_name) {
-	//read the faces vector and get the corresponding vertices from the vertiices vector
-	//generate normals by calling the get_normal_vector(Vertex& A, Vertex& B, Vertex& C) method from VectorArithmetic class
-	//store the normal vertices to the normals vector<Vertex>
-	//print the normals vector to file
 	ProgramTimer normals_calculation;
 	ProgramTimer normals_file_saver;
 
@@ -75,8 +93,10 @@ int FileLoader::GenerateNormals(string& file_name) {
 	return 0;
 }
 
+/*
+The output operation prints the contents of the vertices vector to the ostr provided as the parameter
+*/
 ostream& operator<<(ostream& ostr, vector<Vertex>* current_vertices) {
-	//print the contents of the vertices vector
 	for(vector<Vertex>::iterator current_vertex = current_vertices->begin(); current_vertex != current_vertices->end(); ++current_vertex) {
 		ostr << current_vertex->x << "\t" << current_vertex->y << "\t" << current_vertex->z << endl;
 	}
@@ -84,8 +104,10 @@ ostream& operator<<(ostream& ostr, vector<Vertex>* current_vertices) {
 	return ostr;
 }
 
+/*
+The output operation prints the contents of the faces vector to the ostr provided as the parameter
+*/
 ostream& operator<<(ostream& ostr, vector<Face>* current_faces) {
-	//print the contents of the faces vector
 	vector<int> items;
 	for (vector<Face>::iterator i = current_faces->begin(); i != current_faces->end(); ++i) {
 		items = i->get_face_values();
@@ -98,11 +120,20 @@ ostream& operator<<(ostream& ostr, vector<Face>* current_faces) {
 	return ostr;
 }
 
+/*
+This method takes the file_name and loads it into the corresponding vertices and faces vectors.
+
+It opens the file and reads the first line. If the first line says vertices it starts to load the vector<Vertex> until it hits a bad input.
+At that point, if the line reads faces it starts to store the values into the vector<Face>.
+
+The assumption is no preceding new line characters before the word vertices.
+Also assumes vertices and faces are spelt with lower cases
+*/
 int FileLoader::ParseFile(string& file_name) {
 	ProgramTimer vertices_loader;	
 	ProgramTimer faces_loader;
 
-	string current_line, delimeter = " ";
+	string current_line;
 	int i = 0, j = 0, bad_input = 0, array_size;
 	Vertex current_vertex;
 	Face current_face;
@@ -116,7 +147,6 @@ int FileLoader::ParseFile(string& file_name) {
 	vertices_loader.set_start_time();
 
 	read_file >> current_line;
-	//getline(read_file, current_line);
 	
 	if(current_line.find("vertices") == 0) {
 		while(!bad_input) {
@@ -142,8 +172,10 @@ int FileLoader::ParseFile(string& file_name) {
 		while(!bad_input) {
 			//handle faces here
 
+			//read the first value in the line which is the number of vertices per face
 			read_file >> array_size;
 
+			//if it is a bad input i.e. no integer, it exits. else it stores the corresponding integers on the line into an array of integers and passes that to the set_face_values function
 			if(!read_file) {
 				bad_input = 1;
 				read_file.clear();

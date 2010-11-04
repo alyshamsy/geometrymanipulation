@@ -13,7 +13,6 @@ The default value of these are:
 
 The method uses the parameters provided to generate a 2D array on the heap
 */
-
 Matrix::Matrix(double init_value, int rows, int columns):
 init_value(init_value),
 rows(rows),
@@ -29,7 +28,6 @@ columns(columns) {
 /*
 This is the destructor which deletes the 2D array
 */
-
 Matrix::~Matrix() {
 	for(int i = 0; i < rows; i++) 
 		delete [] matrix[i];
@@ -39,9 +37,8 @@ Matrix::~Matrix() {
 }
 
 /*
-This is the copy constructor which 
+This is the copy constructor which copies the contents of the source matrix to the local matrix
 */
-
 Matrix::Matrix(const Matrix& src):
 rows(src.rows), columns(src.columns), matrix(new double*[src.rows])
 {
@@ -53,14 +50,25 @@ rows(src.rows), columns(src.columns), matrix(new double*[src.rows])
 	}
 }
 
+/*
+set the matrix element to the value provided at the row and column values
+*/
 void Matrix::set_matrix_element(int row, int column, double value) {
 	matrix[row][column] = value;
 }
 
+/*
+get the matrix element value from the row and column values provided
+*/
 double Matrix::get_matrix_element(int row, int column) {
 	return (matrix[row][column]);
 }
 
+/*
+The assignment operator is used to equate the local matrix to the value provided by the parameter and returns the local matrix which is the matrix on the left hand side.
+
+The operation clears the local matrix 2D array and creates a new matrix with the rows and columns values of the parameter matrix and assigns the values of rhs into this
+*/
 Matrix& Matrix::operator=(const Matrix& rhs) {
 	if(this == &rhs)
 		return (*this);

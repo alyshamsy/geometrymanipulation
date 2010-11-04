@@ -4,38 +4,24 @@
 #define PI 3.14159265
 using namespace std;
 
+/*
+the constructor allocates memory to manipulated_vector on the heap
+*/
 MatrixManipulations::MatrixManipulations() {
 	manipulated_vector = new VectorManipulations();
 }
 
+/*
+The destructor deletes the values pointed to by the pointer and NULLs the pointer
+*/
 MatrixManipulations::~MatrixManipulations() {
 	delete manipulated_vector;
 	manipulated_vector = NULL;
 }
 
-bool MatrixManipulations::is_matrix_square(Matrix& A) {
-	if(A.get_rows() == A.get_columns())
-		return true;
-	else
-		return false;
-}
-
-Matrix MatrixManipulations::generate_square_matrix(Matrix& current_matrix) {
-	int number_of_rows = current_matrix.get_rows();
-	int number_of_columns = current_matrix.get_columns();
-
-	int size = min(number_of_rows, number_of_columns);
-	
-	Matrix square_matrix;
-	
-	for(int i = 0; i < size; i++) {
-		for(int j = 0; j < size; j++)
-			square_matrix.set_matrix_element(i, j, current_matrix.get_matrix_element(i, j));
-	}
-
-	return square_matrix;
-}
-
+/*
+Generate the identity matrix based on the size provided by checking if the row value equals the column value and setting that to 1
+*/
 Matrix MatrixManipulations::generate_identity_matrix(int size) {
 	Matrix identity_matrix(0.0, size, size);
 
@@ -49,6 +35,11 @@ Matrix MatrixManipulations::generate_identity_matrix(int size) {
 	return identity_matrix;
 }
 
+/*
+Generates a row vector from a vertex and a size provided. 
+
+The advantage of adding the size it to do combined matrix multiplication using homogenous coordinates
+*/
 Matrix MatrixManipulations::generate_row_vector(Vertex& current_vertex, int size) {
 	Matrix row_vector(0.0, 1, size);
 
@@ -62,6 +53,11 @@ Matrix MatrixManipulations::generate_row_vector(Vertex& current_vertex, int size
 	return row_vector;
 }
 
+/*
+Generates a column vector from a vertex and a size provided. 
+
+The advantage of adding the size it to do combined matrix multiplication using homogenous coordinates
+*/
 Matrix MatrixManipulations::generate_column_vector(Vertex& current_vertex, int size) {
 	Matrix column_vector(0.0, size, 1);
 
@@ -75,6 +71,9 @@ Matrix MatrixManipulations::generate_column_vector(Vertex& current_vertex, int s
 	return column_vector;
 }
 
+/*
+Gets the transpose of the matrix provided, by replacing the values at i, j by the values at j, i
+*/
 Matrix MatrixManipulations::get_matrix_transpose(Matrix& current_matrix) {
 	int rows = current_matrix.get_rows();
 	int columns = current_matrix.get_columns();
@@ -88,6 +87,9 @@ Matrix MatrixManipulations::get_matrix_transpose(Matrix& current_matrix) {
 	return transpose;
 }
 
+/*
+calculates the dot product of 2 matrices and return it as a double value
+*/
 double MatrixManipulations::get_dot_product(Matrix& A, Matrix& B) {
 	double dot_product = 0.0;
 	int rows = A.get_rows();
@@ -101,6 +103,9 @@ double MatrixManipulations::get_dot_product(Matrix& A, Matrix& B) {
 	return dot_product;
 }
 
+/*
+calculate the cross product of the 2 matrices
+*/
 Matrix MatrixManipulations::get_cross_product(Matrix&A, Matrix& B) {
 	Matrix cross_product(0.0, 3, 1);
 
@@ -116,14 +121,17 @@ Matrix MatrixManipulations::get_cross_product(Matrix&A, Matrix& B) {
 	return cross_product;
 }
 
+/*
+The addition operation adds the 2 matrices by adding each element of the matrices at the same location. It assumes that the matrices being passed in are of the same dimension. 
+Those checks are done before this method is called
+*/
 Matrix operator+(Matrix& A, Matrix& B) {
 	int rows_a = A.get_rows();
 	int columns_a = A.get_columns();
 
 	int rows_b = B.get_rows();
 	int columns_b = B.get_columns();
-
-	//if(rows_a == rows_b && columns_a == columns_b) 
+ 
 	Matrix added_matrix(0.0, rows_a, columns_a);
 
 	for(int i = 0; i < rows_a; i++) {
@@ -134,6 +142,10 @@ Matrix operator+(Matrix& A, Matrix& B) {
 	return added_matrix;
 }
 
+/*
+The subtraction operation subtracts the 2 matrices by subtracting each element of the matrices at the same location. It assumes that the matrices being passed in are of the same dimension. 
+Those checks are done before this method is called
+*/
 Matrix operator-(Matrix& A, Matrix& B) {
 	int rows_a = A.get_rows();
 	int columns_a = A.get_columns();
@@ -141,7 +153,6 @@ Matrix operator-(Matrix& A, Matrix& B) {
 	int rows_b = B.get_rows();
 	int columns_b = B.get_columns();
 
-	//if(rows_a == rows_b && columns_a == columns_b) 
 	Matrix subtracted_matrix(0.0, rows_a, columns_a);
 
 	for(int i = 0; i < rows_a; i++) {
@@ -152,6 +163,10 @@ Matrix operator-(Matrix& A, Matrix& B) {
 	return subtracted_matrix;
 }
 
+/*
+The multiplication operation multiplies the 2 matrices. It assumes that the matrices being passed in are of the correct dimension i.e. the number of rows of A should be equal to the number of columns of B. 
+Those checks are done before this method is called
+*/
 Matrix operator*(Matrix& A, Matrix& B) {
 	int rows_a = A.get_rows();
 	int columns_a = A.get_columns();
@@ -159,7 +174,6 @@ Matrix operator*(Matrix& A, Matrix& B) {
 	int rows_b = B.get_rows();
 	int columns_b = B.get_columns();
 
-	//if(columns_a == rows_b) 
 	double element = 0.0;
 	Matrix multiplied_matrix(0.0, rows_a, columns_b);
 
@@ -176,6 +190,9 @@ Matrix operator*(Matrix& A, Matrix& B) {
 	return multiplied_matrix;
 }
 
+/*
+This method prints the matrix provided
+*/
 void MatrixManipulations::print_matrix(Matrix& A) {
 	for(int i = 0; i < A.get_rows(); i++) {
 		for(int j = 0; j < A.get_columns(); j++) {
@@ -186,6 +203,12 @@ void MatrixManipulations::print_matrix(Matrix& A) {
 	cout << "\n";
 }
 
+/*
+generates a vertex from a matrix.
+
+It checks whether the matrix is a row vector or a column vector and how many rows or columns it has.
+If there are 4 rows or 4 columns, it divides the value on the first three row or columns by the value of the 4th row or column
+*/
 Vertex MatrixManipulations::generate_vertex_from_matrix(Matrix& A) {
 	Vertex converted_vertex;
 	double h = 1;
@@ -209,29 +232,17 @@ Vertex MatrixManipulations::generate_vertex_from_matrix(Matrix& A) {
 	return converted_vertex;
 }
 
+/*
+This performs uniform scaling if provided a scaling factor and a Matrix
+*/
 void MatrixManipulations::do_uniform_scaling(int scaling_factor, Matrix& A) {
 	int rows = A.get_rows();
 	A = get_uniform_scaling_matrix(rows, scaling_factor)*A;
 }
 
-void MatrixManipulations::do_matrix_translation(Vertex& translating_vector, Matrix& A) {
-	int rows = A.get_rows();
-
-	A = get_translation_matrix(rows, translating_vector)*A;
-}
-
-void MatrixManipulations::do_axis_rotation(char axis, double angle, Matrix& A) {
-	int rows = A.get_rows();
-
-	A = get_axis_rotation_matrix(rows, axis, angle)*A;
-}
-
-void MatrixManipulations::do_free_rotation(Vertex& arbitrary_axis, double angle, Matrix& A) {
-	int rows = A.get_rows();
-
-	A = get_free_rotation_matrix(rows, arbitrary_axis, angle)*A;
-}
-
+/*
+This method generates the uniform scaling matrix by using the scaling factor and the size of the matrix. If the size of the matrix is 4, it sets the element at 3,3 to be 1
+*/
 Matrix MatrixManipulations::get_uniform_scaling_matrix(int size, int scaling_factor) {
 	Matrix scaling_matrix(0.0, size, size);
 
@@ -248,6 +259,19 @@ Matrix MatrixManipulations::get_uniform_scaling_matrix(int size, int scaling_fac
 	return scaling_matrix;
 }
 
+/*
+This performs matrix translation when provided a translating vector and a matrix
+*/
+void MatrixManipulations::do_matrix_translation(Vertex& translating_vector, Matrix& A) {
+	int rows = A.get_rows();
+
+	A = get_translation_matrix(rows, translating_vector)*A;
+}
+
+/*
+This method generates the translation matrix by using the translating vector and the size of the matrix. 
+It assumes multiplication by a column vector hence assigns the values of the translating vector at the positions 0,3 1,3 and 2,3 of the matrix
+*/
 Matrix MatrixManipulations::get_translation_matrix(int size, Vertex& translating_vector) {
 	Matrix translation_matrix = generate_identity_matrix(size);
 
@@ -258,6 +282,20 @@ Matrix MatrixManipulations::get_translation_matrix(int size, Vertex& translating
 	return translation_matrix;
 }
 
+/*
+This performs rotation about the x, y or z axis using the axis, angle and Matrix values
+*/
+void MatrixManipulations::do_axis_rotation(char axis, double angle, Matrix& A) {
+	int rows = A.get_rows();
+
+	A = get_axis_rotation_matrix(rows, axis, angle)*A;
+}
+
+/*
+This generates the axis rotation matrix based on the size and the angle and returns the matrix corresponding to the axis provided.
+
+If the size of the matrix is 4, it sets the bottom right (3,3) element as 1.0 and sets the rest of the values of the matrix based on the axis being rotated by. The angle is converted from degrees to radians
+*/
 Matrix MatrixManipulations::get_axis_rotation_matrix(int size, char axis, double angle) {
 	Matrix axis_rotation_matrix(0.0, size, size);
 	angle = angle*(PI/180);
@@ -293,6 +331,20 @@ Matrix MatrixManipulations::get_axis_rotation_matrix(int size, char axis, double
 	}
 }
 
+/*
+this performs rotation about an arbitrary axis on the matrix
+*/
+void MatrixManipulations::do_free_rotation(Vertex& arbitrary_axis, double angle, Matrix& A) {
+	int rows = A.get_rows();
+
+	A = get_free_rotation_matrix(rows, arbitrary_axis, angle)*A;
+}
+
+/*
+this generates the arbitrary axis rotation matrix based on the vertex and the angle. 
+
+It unitizes the vector being passed in before using it and converts the angle from degrees to radians
+*/
 Matrix MatrixManipulations::get_free_rotation_matrix(int size, Vertex& arbitrary_axis, double angle) {
 	Matrix free_rotation_matrix(0.0, size, size);
 	angle = angle*(PI/180);
