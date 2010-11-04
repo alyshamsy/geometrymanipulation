@@ -3,9 +3,15 @@
 
 #include <vector>
 
-#define min_size 4
-
 using namespace std;
+
+/*
+This class defines the structure of the Face which is a vector of integers which stores all the face values. The number_of_vertices variable stores the number
+of vertices that make up the face
+
+It has a default constructor, a constructor with one parameter and a copy constructor along with a destructor
+It has a pair of getters and setters for the vector of integers and number_of_vertices
+*/
 
 class Face {
 public:
@@ -17,8 +23,6 @@ public:
 	vector<int> get_face_values();
 	void set_number_of_vertices(int vertices);
 	int get_number_of_vertices();
-
-	//ostream& operator<<(ostream& ostr, const Face& current_face);
 
 private:
 	vector<int> face;

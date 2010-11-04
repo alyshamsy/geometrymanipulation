@@ -5,6 +5,23 @@
 #include "Vertex.h"
 #include "VectorManipulations.h"
 
+/*
+This class is used to do all matrix calculations and geometry manipulations
+
+There are methods to:
+- generate the identity matrix
+- generate row and column vector matrices from vertices
+- get matrix transpose
+- get the dot and cross products between 2 matrices
+- do matrix translation
+- do free rotation
+- do axis rotation
+- do uniform scaling
+- also to generate a vertex from a matrix
+
+There are also methods to perform addition, subtraction and multiplication operations
+*/
+
 class MatrixManipulations {
 public:
 	MatrixManipulations();
