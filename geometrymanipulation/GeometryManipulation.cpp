@@ -13,7 +13,7 @@ using namespace std;
 /*
 This method is used to trim preceding and trailing spaces from a string. Used during script handler if a user enters a trailing space after the words.
 
-It finds the first non space characte and last non space character as its starting and ending position and it gets the substring from starting to end
+It finds the first non space character and last non space character as its starting and ending position and it gets the substring from starting to end
 */
 void TrimSpaces(string& current_line) {
 	int starting_position = current_line.find_first_not_of(" \t");
@@ -513,7 +513,9 @@ int main() {
 				}
 				input = 4;
 			}
-
+		/*
+		This is the default case and is executed if no valid entry is provided
+		*/
 		default:
 			cout << "Please provide a valid entry" << endl;
 			cin.clear();
