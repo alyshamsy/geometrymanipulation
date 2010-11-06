@@ -249,7 +249,7 @@ int main() {
 	FileLoader* loader = new FileLoader();
 	MatrixManipulations matrix_handler;
 
-	cout << "Welcome to Aly's world of Geometry Manipulation" << endl;
+	cout << "Welcome to Aly's World of Geometry Manipulation" << endl;
 
 	while(input != 0) {
 		cout << "\nPlease select one of the following options:" << endl;
